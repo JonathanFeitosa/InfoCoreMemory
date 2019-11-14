@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">AndroidHardware</string>
+
+    <string name="core">Core</string>
+    <string name="idle">Idle</string>
+    <string name="free">Free</string>
+</resources>

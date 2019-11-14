@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="cardStyle" format="reference" />
+    <attr name="listDividerStyle" format="reference" />
+    <attr name="popupWindowStyle" format="reference" />
+    <attr name="optionsMenuStyle" format="reference" />
+</resources>
