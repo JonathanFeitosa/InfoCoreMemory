@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 
@@ -16,10 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerCPU;
-
-    private ArrayList<CPUCoreInfo> cpuCoreList, cpuCoreList2;
-    private CPUCoreAdapter cpuCoreAdapter;
+    private ArrayList<CPUCoreInfo> cpuCoreList;
     private ScheduledExecutorService scheduledExecutorService;
 
     @Override
@@ -27,46 +25,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        recyclerCPU = (RecyclerView) findViewById(R.id.recyclerCPU);
-        recyclerCPU.setItemAnimator(null);
         loadCPUCore();
-        int columns;
-        if (Runtime.getRuntime().availableProcessors() == 2) {
-            columns = 2;
-        } else {
-            columns = 4;
-        }
-        GridLayoutManager layoutManager = new GridLayoutManager(this, columns);
-        cpuCoreAdapter = new CPUCoreAdapter(this, cpuCoreList);
-        recyclerCPU.setLayoutManager(layoutManager);
-        recyclerCPU.setAdapter(cpuCoreAdapter);
-        recyclerCPU.setNestedScrollingEnabled(false);
 
         if (!cpuCoreList.isEmpty()) {
-            cpuCoreList2 = new ArrayList<>();
             scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
             scheduledExecutorService.scheduleAtFixedRate(() -> {
                 loadCPUCore();
-                cpuCoreList2 = cpuCoreList;
-                recyclerCPU.post(() ->
-                        cpuCoreAdapter.updateCPUCoreListItems(cpuCoreList2)
-                );
+
+                int g = 0;
+                for(CPUCoreInfo teste : cpuCoreList){
+                    g+=1;
+                    Log.i("Resultado", teste.getCoreName() + " - Valor: " + teste.getCoreValue());
+                }
+
             }, 1, 2, TimeUnit.SECONDS);
         }
-
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        if (recyclerCPU != null) {
-            LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(this, R.anim.recycler_layout_animation);
-            recyclerCPU.setLayoutAnimation(controller);
-            recyclerCPU.scheduleLayoutAnimation();
-        }
-    }
-
 
     private void loadCPUCore() {
         cpuCoreList = new ArrayList<>();
